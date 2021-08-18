@@ -74,6 +74,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         currentFilter = CIFilter(name: actionTitle)
         
+        filterLabel.setTitle(currentFilter.name, for: .normal)
+        
         let beginImage = CIImage(image: currentImage)
         currentFilter.setValue(beginImage, forKey: kCIInputImageKey)
         
