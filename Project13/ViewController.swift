@@ -11,6 +11,8 @@ import CoreImage
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var intensity: UISlider!
+    @IBOutlet var filterLabel: UIButton!
+    
     var currentImage: UIImage!
     
     var context: CIContext!
@@ -24,6 +26,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         context = CIContext()
         currentFilter = CIFilter(name: "CISepiaTone")
+        filterLabel.setTitle(currentFilter.name, for: .normal)
     }
     
     @objc func importPicture() {
