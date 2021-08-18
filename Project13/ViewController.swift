@@ -6,17 +6,24 @@
 //
 
 import UIKit
+import CoreImage
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var intensity: UISlider!
     var currentImage: UIImage!
     
+    var context: CIContext!
+    var currentFilter: CIFilter!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Instafilter"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(importPicture))
+        
+        context = CIContext()
+        currentFilter = CIFilter(name: "CISepiaTone")
     }
     
     @objc func importPicture() {
@@ -31,6 +38,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         guard let image = info[.editedImage] as? UIImage else { return }
         dismiss(animated: true)
         currentImage = image
+        
+        let beginImage = CIImage(image: currentImage)
+        currentFilter.setValue(beginImage, forKey: kCIInputImageKey)
+        applyProcessing()
     }
 
     @IBAction func changeFilter(_ sender: Any) {
@@ -40,6 +51,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func intensityChanged(_ sender: Any) {
+        applyProcessing()
+    }
+    
+    func applyProcessing() {
+        currentFilter.setValue(intensity.value, forKey: kCIInputIntensityKey)
+        
+        if let cgImage = context.createCGImage(currentFilter.outputImage!, from: currentFilter.outputImage!.extent) {
+            let processedImage = UIImage(cgImage: cgImage)
+            imageView.image = processedImage
+        }
     }
     
 }
