@@ -41,7 +41,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[.editedImage] as? UIImage else { return }
         dismiss(animated: true)
+        
         currentImage = image
+        
+        
         
         let beginImage = CIImage(image: currentImage)
         currentFilter.setValue(beginImage, forKey: kCIInputImageKey)
@@ -124,7 +127,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         if let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
             let processedImage = UIImage(cgImage: cgImage)
+            imageView.alpha = 0
             imageView.image = processedImage
+            
+            UIView.animate(withDuration: 1, delay: 0, options: []) {
+                self.imageView.alpha = 1
+            } completion: { finished in
+            }
+
         }
     }
     
